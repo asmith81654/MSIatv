@@ -10,6 +10,8 @@ import DramaSection from "@/components/home/DramaSection";
 import GamesSection from "@/components/home/GamesSection";
 import HostSection from "@/components/home/HostSection";
 import MarqueeBanner from "@/components/home/MarqueeBanner";
+import BrandCTASection from "@/components/home/BrandCTASection";
+import ProgramShowcase from "@/components/home/ProgramShowcase";
 
 export default function HomePage() {
   return (
@@ -22,9 +24,11 @@ export default function HomePage() {
         <ShortVideoSection />
         <ProductGrid />
         <DramaSection />
+        <ProgramShowcase />
         <GamesSection />
         <HostSection />
       </main>
+      <BrandCTASection />
       <Footer />
     </div>
   );

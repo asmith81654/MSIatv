@@ -8,7 +8,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.1.0",
     "@types/three": "^0.185.0",
+    "class-variance-authority": "^0.7.0",
     "framer-motion": "^11.3.0",
     "lucide-react": "^0.400.0",
     "next": "14.2.5",
