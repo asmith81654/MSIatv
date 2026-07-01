@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { ChevronLeft, ChevronRight, Radio, Eye, ShoppingBag } from "lucide-react";
+import { ChevronLeft, ChevronRight, Radio, Eye, ShoppingBag, Sparkles } from "lucide-react";
 import Link from "next/link";
 import ArcLightBackground from "@/components/ui/ArcLightBackground";
 
@@ -12,17 +12,19 @@ const AUTOPLAY_MS = 6000;
 const slides = [
   {
     id: 1,
-    title: "今晚8點 — 明星帶貨節",
-    subtitle: "限時狂歡、萬件好禮0元抽！",
-    host: "陳耀聯 x 李志偉",
+    kicker: "今晚 8:00 · 黃金檔直播",
+    title: "明星帶貨節",
+    subtitle: "限時狂歡、萬件好禮 0 元抽，全城矚目的購物盛典。",
+    host: "陳耀聯 × 李志偉",
     viewers: "12.8萬",
     status: "live",
     cta: "立即進入直播間",
   },
   {
     id: 2,
-    title: "經典港劇 — 流氓太子",
-    subtitle: "ATV經典重溫，20集全集免費看",
+    kicker: "ATV 經典重溫",
+    title: "流氓太子",
+    subtitle: "港劇黃金年代，20 集全集免費放送，經典再現。",
     host: "全集免費看",
     viewers: "5.2萬",
     status: "vod",
@@ -30,8 +32,9 @@ const slides = [
   },
   {
     id: 3,
-    title: "2024亞洲小姐競選 — 全球大賽",
-    subtitle: "美麗舞台，光彩綻放，尊貴加冕",
+    kicker: "2024 全球大賽 · 特別節目",
+    title: "亞洲小姐競選",
+    subtitle: "美麗舞台，光彩綻放，見證尊貴加冕的璀璨一刻。",
     host: "特別節目",
     viewers: "8.6萬",
     status: "new",
@@ -61,8 +64,15 @@ export default function HeroCarousel() {
         const items = gsap.utils.toArray<HTMLElement>("[data-hero-item]");
         gsap.fromTo(
           items,
-          { opacity: 0, y: 24 },
-          { opacity: 1, y: 0, duration: 0.6, ease: "power3.out", stagger: 0.08 }
+          { opacity: 0, y: 40, filter: "blur(6px)" },
+          {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            duration: 0.85,
+            ease: "power3.out",
+            stagger: 0.1,
+          }
         );
         if (barRef.current) {
           gsap.fromTo(
@@ -74,7 +84,7 @@ export default function HeroCarousel() {
       });
 
       mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set("[data-hero-item]", { opacity: 1, y: 0 });
+        gsap.set("[data-hero-item]", { opacity: 1, y: 0, filter: "blur(0px)" });
         if (barRef.current) gsap.set(barRef.current, { scaleX: 1 });
       });
 
@@ -86,99 +96,127 @@ export default function HeroCarousel() {
   const slide = slides[current];
 
   return (
-    <div className="relative w-full overflow-hidden">
-      <div className="mx-auto max-w-[1280px] px-4 py-4">
-        <div
-          ref={scope}
-          className="relative w-full aspect-[16/7] sm:aspect-[16/6] lg:aspect-[16/5] rounded-2xl overflow-hidden bg-atv-dark"
-        >
-          {/* ========== LAYER 0: Arc Light Background ========== */}
-          <div className="absolute inset-0 z-0">
-            <ArcLightBackground />
+    <section
+      ref={scope}
+      className="relative w-full min-h-[88vh] lg:h-screen lg:max-h-[960px] overflow-hidden bg-atv-dark grain"
+    >
+      {/* ========== LAYER 0: Arc Light Background (full bleed) ========== */}
+      <div className="absolute inset-0 z-0">
+        <ArcLightBackground />
+      </div>
+
+      {/* ========== LAYER 1: Cinematic gradient overlays ========== */}
+      <div className="absolute inset-0 z-[1] pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-t from-atv-dark via-atv-dark/40 to-atv-dark/70" />
+        <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-atv-red/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent" />
+        <div className="absolute -top-1/4 left-1/4 h-[60vh] w-[60vh] rounded-full bg-atv-gold/10 blur-[120px]" />
+      </div>
+
+      {/* ========== LAYER 2: Text content (GSAP staggered) ========== */}
+      <div className="relative z-10 mx-auto flex h-full min-h-[88vh] lg:min-h-0 max-w-[1400px] items-center px-6 sm:px-10 lg:px-16">
+        <div key={current} className="max-w-3xl">
+          {/* Status + kicker */}
+          <div data-hero-item className="mb-6 flex flex-wrap items-center gap-3">
+            {slide.status === "live" && (
+              <span className="flex items-center gap-1.5 rounded-full bg-red-600 px-3.5 py-1.5 text-xs font-bold tracking-wide">
+                <Radio className="h-3 w-3 animate-pulse" />
+                LIVE
+              </span>
+            )}
+            {slide.status === "new" && (
+              <span className="flex items-center gap-1.5 rounded-full bg-atv-gold px-3.5 py-1.5 text-xs font-bold text-atv-dark">
+                <Sparkles className="h-3 w-3" />
+                新片上架
+              </span>
+            )}
+            <span className="text-gold-gradient text-sm font-semibold uppercase tracking-[0.25em]">
+              {slide.kicker}
+            </span>
           </div>
 
-          {/* ========== LAYER 1: Static gradient overlays ========== */}
-          <div className="absolute inset-0 z-[1] pointer-events-none">
-            <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-atv-red/15 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/10 to-transparent" />
+          {/* Giant title */}
+          <h1
+            data-hero-item
+            className="font-display text-5xl leading-[0.95] text-white drop-shadow-2xl sm:text-7xl lg:text-8xl xl:text-[7.5rem]"
+          >
+            {slide.title}
+          </h1>
+
+          {/* Gold rule */}
+          <div data-hero-item className="my-6 h-[3px] w-24 rounded-full bg-gradient-to-r from-atv-gold to-transparent" />
+
+          {/* Subtitle */}
+          <p
+            data-hero-item
+            className="max-w-xl text-base leading-relaxed text-gray-300 drop-shadow-md sm:text-lg lg:text-xl"
+          >
+            {slide.subtitle}
+          </p>
+
+          {/* Meta row */}
+          <div data-hero-item className="mt-5 flex items-center gap-5 text-sm text-gray-400">
+            <span className="flex items-center gap-1.5">
+              <Eye className="h-4 w-4 text-atv-gold" />
+              <span className="font-semibold text-white">{slide.viewers}</span> 觀看中
+            </span>
+            <span className="h-4 w-px bg-white/20" />
+            <span>{slide.host}</span>
           </div>
 
-          {/* ========== LAYER 2: Text content (GSAP staggered) ========== */}
-          <div key={current} className="absolute inset-0 flex items-center z-10">
-            <div className="px-6 sm:px-10 lg:px-16 max-w-2xl">
-              <div data-hero-item className="flex items-center gap-2 mb-3">
-                {slide.status === "live" && (
-                  <span className="flex items-center gap-1.5 px-3 py-1 bg-red-600 rounded-full text-xs font-bold">
-                    <Radio className="w-3 h-3 animate-pulse" />
-                    LIVE
-                  </span>
-                )}
-                {slide.status === "new" && (
-                  <span className="px-3 py-1 bg-atv-gold text-atv-dark rounded-full text-xs font-bold">
-                    新片上架
-                  </span>
-                )}
-                <span className="flex items-center gap-1 text-xs text-gray-300">
-                  <Eye className="w-3.5 h-3.5" />
-                  {slide.viewers}觀看
-                </span>
-              </div>
-              <h1
-                data-hero-item
-                className="font-display text-2xl sm:text-4xl lg:text-5xl text-white mb-2 leading-tight drop-shadow-lg"
-              >
-                {slide.title}
-              </h1>
-              <p data-hero-item className="text-sm sm:text-base text-gray-300 mb-1 drop-shadow-md">
-                {slide.subtitle}
-              </p>
-              <p data-hero-item className="text-xs text-gray-400 mb-5">
-                {slide.host}
-              </p>
-              <div data-hero-item>
-                <Link
-                  href={slide.status === "live" ? "/live/demo/" : slide.status === "new" ? "/shows/" : "/shows/"}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-atv-red hover:bg-red-700 text-white font-bold rounded-xl transition-colors"
-                >
-                  <ShoppingBag className="w-4 h-4" />
-                  {slide.cta}
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* ========== LAYER 3: Controls (arrows + dots + progress) ========== */}
-          <div className="absolute inset-0 z-20 pointer-events-none">
-            <button
-              onClick={prev}
-              className="pointer-events-auto absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-colors"
+          {/* CTA */}
+          <div data-hero-item className="mt-9 flex flex-wrap items-center gap-4">
+            <Link
+              href={slide.status === "live" ? "/live/demo/" : "/shows/"}
+              className="group inline-flex items-center gap-2.5 rounded-xl bg-atv-red px-8 py-4 text-base font-bold text-white shadow-lg shadow-atv-red/30 transition-all hover:bg-red-700 hover:shadow-xl hover:shadow-atv-red/40 hover:-translate-y-0.5"
             >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={next}
-              className="pointer-events-auto absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-colors"
+              <ShoppingBag className="h-5 w-5 transition-transform group-hover:scale-110" />
+              {slide.cta}
+            </Link>
+            <Link
+              href="/shows/"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/25 px-7 py-4 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:border-atv-gold hover:text-atv-gold"
             >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-              {slides.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrent(i)}
-                  className={`h-2 rounded-full transition-all ${i === current ? "w-6 bg-atv-red" : "w-2 bg-white/40"}`}
-                />
-              ))}
-            </div>
-
-            {/* Autoplay progress bar */}
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/10">
-              <div ref={barRef} className="h-full origin-left bg-atv-gold" style={{ transform: "scaleX(0)" }} />
-            </div>
+              探索全部節目
+            </Link>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* ========== LAYER 3: Controls (arrows + dots + progress) ========== */}
+      <div className="absolute inset-0 z-20 pointer-events-none">
+        <button
+          onClick={prev}
+          aria-label="上一張"
+          className="pointer-events-auto absolute left-4 top-1/2 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition-colors hover:bg-black/70 sm:flex"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+        <button
+          onClick={next}
+          aria-label="下一張"
+          className="pointer-events-auto absolute right-4 top-1/2 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition-colors hover:bg-black/70 sm:flex"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
+
+        {/* Slide index dots + numbering */}
+        <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-3">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              aria-label={`切換至第 ${i + 1} 張`}
+              className={`h-2 rounded-full transition-all ${i === current ? "w-8 bg-atv-red" : "w-2 bg-white/40 hover:bg-white/70"}`}
+            />
+          ))}
+        </div>
+
+        {/* Autoplay progress bar */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
+          <div ref={barRef} className="h-full origin-left bg-atv-gold" style={{ transform: "scaleX(0)" }} />
+        </div>
+      </div>
+    </section>
   );
 }
