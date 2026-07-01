@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Play, Star, Clock, Flame } from "lucide-react";
 import Link from "next/link";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 const nowTrending = [
   { id: 101, title: "流氓太子", episode: "20集全", rating: "9.1", tag: "熱播", cover: "" },
@@ -89,12 +90,18 @@ function DramaRow({ title, dramas, icon: Icon }: { title: string; dramas: typeof
 
 export default function DramaSection() {
   return (
-    <section className="py-8 bg-atv-dark text-white">
+    <section className="py-10 bg-atv-dark text-white">
       <div className="mx-auto max-w-[1280px] px-4">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-black">🎬 精選劇集</h2>
-          <Link href="/drama/" className="text-sm text-atv-gold font-medium hover:underline">更多劇集 →</Link>
-        </div>
+        <SectionHeading
+          dark
+          kicker="Drama & Series"
+          title="精選劇集"
+          action={
+            <Link href="/drama/" className="text-sm text-atv-gold font-medium hover:underline">
+              更多劇集 →
+            </Link>
+          }
+        />
 
         <DramaRow title="正在熱播" dramas={nowTrending} icon={Flame} />
         <DramaRow title="經典再現" dramas={classicDramas} icon={Star} />

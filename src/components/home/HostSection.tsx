@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Radio, Users, Heart } from "lucide-react";
+import { Radio, Heart } from "lucide-react";
 import Link from "next/link";
+import SectionHeading from "@/components/ui/SectionHeading";
+import Reveal from "@/components/ui/Reveal";
 
 const hostList = [
   { id: 1, name: "陳耀聯", fans: "128萬", status: "live", tag: "金牌主播" },
@@ -17,42 +18,36 @@ const hostList = [
 
 export default function HostSection() {
   return (
-    <section className="py-8 bg-atv-gray">
+    <section className="py-10 bg-atv-gray">
       <div className="mx-auto max-w-[1280px] px-4">
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-atv-red" />
-            <h2 className="text-xl font-black">主播陣容</h2>
-          </div>
-          <Link href="/hosts/" className="text-sm text-atv-red font-medium hover:underline">全部主播 →</Link>
-        </div>
+        <SectionHeading
+          kicker="Creators"
+          title="主播陣容"
+          action={
+            <Link href="/hosts/" className="text-sm text-atv-red font-medium hover:underline">
+              全部主播 →
+            </Link>
+          }
+        />
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
-          {hostList.map((host, i) => (
-            <motion.div
-              key={host.id}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.03 }}
-              viewport={{ once: true }}
-            >
-              <Link href="/hosts/" className="block group text-center">
-                <div className="relative w-16 h-16 mx-auto mb-2 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 overflow-hidden">
-                  {host.status === "live" && (
-                    <div className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-atv-red rounded-full border-2 border-white flex items-center justify-center">
-                      <Radio className="w-2 h-2 text-white" />
-                    </div>
-                  )}
-                </div>
-                <h3 className="text-sm font-bold text-atv-dark group-hover:text-atv-red transition-colors">{host.name}</h3>
-                <p className="text-[10px] text-gray-400 mt-0.5">{host.tag}</p>
-                <div className="flex items-center justify-center gap-1 mt-1 text-[10px] text-gray-500">
-                  <Heart className="w-3 h-3" />{host.fans}
-                </div>
-              </Link>
-            </motion.div>
+        <Reveal className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4" stagger={0.05} y={16}>
+          {hostList.map((host) => (
+            <Link key={host.id} href="/hosts/" className="block group text-center">
+              <div className="relative w-16 h-16 mx-auto mb-2 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 overflow-hidden ring-2 ring-transparent group-hover:ring-atv-red/40 transition-all group-hover:scale-105 duration-300">
+                {host.status === "live" && (
+                  <div className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-atv-red rounded-full border-2 border-white flex items-center justify-center">
+                    <Radio className="w-2 h-2 text-white" />
+                  </div>
+                )}
+              </div>
+              <h3 className="text-sm font-bold text-atv-dark group-hover:text-atv-red transition-colors">{host.name}</h3>
+              <p className="text-[10px] text-gray-400 mt-0.5">{host.tag}</p>
+              <div className="flex items-center justify-center gap-1 mt-1 text-[10px] text-gray-500">
+                <Heart className="w-3 h-3" />{host.fans}
+              </div>
+            </Link>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

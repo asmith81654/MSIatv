@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Radio, Eye, Heart } from "lucide-react";
 import Link from "next/link";
+import SectionHeading from "@/components/ui/SectionHeading";
+import Reveal from "@/components/ui/Reveal";
 
 const liveRooms = [
   { id: 1, host: "ATV美妝專區", title: "韓國保養品限時特賣", viewers: "2.3萬", likes: "1.2萬", tag: "美妝" },
@@ -13,28 +14,29 @@ const liveRooms = [
 
 export default function LiveStreamSection() {
   return (
-    <section className="py-8 bg-white">
+    <section className="py-10 bg-white">
       <div className="mx-auto max-w-[1280px] px-4">
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-2">
-            <Radio className="w-5 h-5 text-atv-red" />
-            <h2 className="text-xl font-black">正在直播</h2>
-            <span className="px-2 py-0.5 bg-red-100 text-atv-red text-xs font-bold rounded-full">
-              {liveRooms.length}個房間</span>
-          </div>
-          <Link href="/live/demo/" className="text-sm text-atv-red font-medium hover:underline">
-            查看全部 →</Link>
-        </div>
+        <SectionHeading
+          kicker="Live Commerce"
+          title={
+            <span className="inline-flex items-center gap-2 align-middle">
+              <Radio className="w-6 h-6 text-atv-red" />
+              正在直播
+              <span className="px-2 py-0.5 bg-red-100 text-atv-red text-xs font-bold rounded-full align-middle">
+                {liveRooms.length}個房間
+              </span>
+            </span>
+          }
+          action={
+            <Link href="/live/demo/" className="text-sm text-atv-red font-medium hover:underline">
+              查看全部 →
+            </Link>
+          }
+        />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {liveRooms.map((room, i) => (
-            <motion.div
-              key={room.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              viewport={{ once: true }}
-            >
+        <Reveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {liveRooms.map((room) => (
+            <div key={room.id}>
               <Link href={`/live/demo/`} className="block group">
                 <div className="relative aspect-video bg-atv-gray rounded-xl overflow-hidden mb-2">
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
@@ -59,9 +61,9 @@ export default function LiveStreamSection() {
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">主播：{room.host}</p>
               </Link>
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

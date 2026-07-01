@@ -210,12 +210,12 @@ export function PulseFitHero({
           >
             <h2
               style={{
-                fontFamily: "Inter, sans-serif",
-                fontWeight: 700,
+                fontFamily: '"Noto Serif TC", serif',
+                fontWeight: 900,
                 fontSize: "clamp(32px, 6vw, 64px)",
-                lineHeight: "1.1",
+                lineHeight: "1.15",
                 color: c.title,
-                letterSpacing: "-0.02em",
+                letterSpacing: "-0.01em",
               }}
             >
               {title}

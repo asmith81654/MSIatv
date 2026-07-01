@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Play, Heart, MessageCircle } from "lucide-react";
+import SectionHeading from "@/components/ui/SectionHeading";
+import Reveal from "@/components/ui/Reveal";
 
 const shorts = [
   { id: 1, title: "香港街頭美食探店，這家酒樓太絕了！", author: "ATV吃貨團", likes: "12.5萬", comments: "3,200", duration: "0:45" },
@@ -14,23 +15,21 @@ const shorts = [
 
 export default function ShortVideoSection() {
   return (
-    <section className="py-8 bg-atv-gray">
+    <section className="py-10 bg-atv-gray">
       <div className="mx-auto max-w-[1280px] px-4">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xl font-black">🎬 短視頻</h2>
-          <a href="/shorts/" className="text-sm text-atv-red font-medium hover:underline">更多短片 →</a>
-        </div>
+        <SectionHeading
+          kicker="Shorts"
+          title="短視頻精選"
+          action={
+            <a href="/shorts/" className="text-sm text-atv-red font-medium hover:underline">
+              更多短片 →
+            </a>
+          }
+        />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {shorts.map((video, i) => (
-            <motion.div
-              key={video.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.05 }}
-              viewport={{ once: true }}
-              className="group cursor-pointer"
-            >
+        <Reveal className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" stagger={0.06} y={22}>
+          {shorts.map((video) => (
+            <div key={video.id} className="group cursor-pointer">
               <div className="relative aspect-[9/16] bg-gray-300 rounded-xl overflow-hidden mb-2">
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60 flex flex-col justify-end p-2">
                   <span className="absolute top-2 right-2 px-1.5 py-0.5 bg-black/60 text-white text-[10px] rounded">{video.duration}</span>
@@ -47,9 +46,9 @@ export default function ShortVideoSection() {
                 <span className="flex items-center gap-0.5"><Heart className="w-3 h-3" />{video.likes}</span>
                 <span className="flex items-center gap-0.5"><MessageCircle className="w-3 h-3" />{video.comments}</span>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

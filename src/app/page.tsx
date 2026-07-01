@@ -12,6 +12,7 @@ import HostSection from "@/components/home/HostSection";
 import MarqueeBanner from "@/components/home/MarqueeBanner";
 import BrandCTASection from "@/components/home/BrandCTASection";
 import ProgramShowcase from "@/components/home/ProgramShowcase";
+import StatStrip from "@/components/home/StatStrip";
 
 export default function HomePage() {
   return (
@@ -20,6 +21,7 @@ export default function HomePage() {
       <MarqueeBanner />
       <main className="flex-1">
         <HeroCarousel />
+        <StatStrip />
         <LiveStreamSection />
         <ShortVideoSection />
         <ProductGrid />

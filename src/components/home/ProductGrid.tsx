@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ShoppingCart, Tag, Flame } from "lucide-react";
+import { Flame } from "lucide-react";
 import Link from "next/link";
+import SectionHeading from "@/components/ui/SectionHeading";
+import Reveal from "@/components/ui/Reveal";
 
 const products = [
   { id: 1, name: "SK-II 神仙水 230ml", price: 1299, original: 1680, discount: "下殺23%", tag: "爆款", sold: "1.2萬件", image: "bg-rose-100" },
@@ -17,25 +18,26 @@ const products = [
 
 export default function ProductGrid() {
   return (
-    <section className="py-8 bg-white">
+    <section className="py-10 bg-white">
       <div className="mx-auto max-w-[1280px] px-4">
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-2">
-            <Flame className="w-5 h-5 text-atv-red" />
-            <h2 className="text-xl font-black">熱賣推薦</h2>
-          </div>
-          <Link href="/product/demo/" className="text-sm text-atv-red font-medium hover:underline">更多好物 →</Link>
-        </div>
+        <SectionHeading
+          kicker="Hot Deals"
+          title={
+            <span className="inline-flex items-center gap-2 align-middle">
+              <Flame className="w-6 h-6 text-atv-red" />
+              熱賣推薦
+            </span>
+          }
+          action={
+            <Link href="/product/demo/" className="text-sm text-atv-red font-medium hover:underline">
+              更多好物 →
+            </Link>
+          }
+        />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {products.map((product, i) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-              viewport={{ once: true }}
-            >
+        <Reveal className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" stagger={0.06}>
+          {products.map((product) => (
+            <div key={product.id}>
               <Link href="/product/demo/" className="block group">
                 <div className={`relative aspect-square ${product.image} rounded-xl overflow-hidden mb-2 flex items-center justify-center`}>
                   <span className="text-gray-400 text-sm">商品圖 {product.id}</span>
@@ -55,9 +57,9 @@ export default function ProductGrid() {
                 </div>
                 <p className="text-[10px] text-gray-400">已售{product.sold}</p>
               </Link>
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );
