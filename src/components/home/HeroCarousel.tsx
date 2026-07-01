@@ -19,6 +19,8 @@ const slides = [
     viewers: "12.8萬",
     status: "live",
     cta: "立即進入直播間",
+    image:
+      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=2400&q=80",
   },
   {
     id: 2,
@@ -29,6 +31,8 @@ const slides = [
     viewers: "5.2萬",
     status: "vod",
     cta: "立即觀看",
+    image:
+      "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=2400&q=80",
   },
   {
     id: 3,
@@ -39,6 +43,8 @@ const slides = [
     viewers: "8.6萬",
     status: "new",
     cta: "觀看精華",
+    image:
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=2400&q=80",
   },
 ];
 
@@ -46,6 +52,7 @@ export default function HeroCarousel() {
   const [current, setCurrent] = useState(0);
   const scope = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLDivElement>(null);
 
   const next = useCallback(() => setCurrent((p) => (p + 1) % slides.length), []);
   const prev = useCallback(() => setCurrent((p) => (p - 1 + slides.length) % slides.length), []);
@@ -81,11 +88,26 @@ export default function HeroCarousel() {
             { scaleX: 1, duration: AUTOPLAY_MS / 1000, ease: "none" }
           );
         }
+        // Ken Burns: slow zoom/pan on the background image
+        if (imgRef.current) {
+          gsap.fromTo(
+            imgRef.current,
+            { scale: 1.05, xPercent: 0, opacity: 0 },
+            {
+              scale: 1.16,
+              xPercent: -2,
+              opacity: 1,
+              duration: AUTOPLAY_MS / 1000 + 1,
+              ease: "none",
+            }
+          );
+        }
       });
 
       mm.add("(prefers-reduced-motion: reduce)", () => {
         gsap.set("[data-hero-item]", { opacity: 1, y: 0, filter: "blur(0px)" });
         if (barRef.current) gsap.set(barRef.current, { scaleX: 1 });
+        if (imgRef.current) gsap.set(imgRef.current, { scale: 1.05, opacity: 1 });
       });
 
       return () => mm.revert();
@@ -105,8 +127,20 @@ export default function HeroCarousel() {
         <ArcLightBackground />
       </div>
 
+      {/* ========== LAYER 0.5: Slide background image (Ken Burns) ========== */}
+      <div className="absolute inset-0 z-[1] overflow-hidden">
+        <div
+          key={current}
+          ref={imgRef}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${slide.image})` }}
+        />
+        {/* darken image so text stays readable and shader glow blends */}
+        <div className="absolute inset-0 bg-atv-dark/45 mix-blend-multiply" />
+      </div>
+
       {/* ========== LAYER 1: Cinematic gradient overlays ========== */}
-      <div className="absolute inset-0 z-[1] pointer-events-none">
+      <div className="absolute inset-0 z-[2] pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-t from-atv-dark via-atv-dark/40 to-atv-dark/70" />
         <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-atv-red/20 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent" />
